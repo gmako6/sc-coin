@@ -1,7 +1,9 @@
 import React from "react";
-import { setGlobalState } from "../store";
+import { setGlobalState, useGlobalState } from "../store";
 
 const Hero = () => {
+  const [stats] = useGlobalState("stats");
+
   return (
     <div className="md:py-24  bg-[url('./assets/contentImages/layered-peaks.svg')] bg-no-repeat bg-cover">
       <div className="container mx-auto ">
@@ -35,19 +37,19 @@ const Hero = () => {
             <div className="grid grid-cols-3 justify-center items-center mt-10 gap-5 ">
               <div className="p-5 flex flex-col justify-center items-center bg-slate-100 h-20 border shadow-md w-full">
                 <span className="text-lg font-bold text-pink-500 leading-5">
-                  {5}
+                  {stats?.totalProjects || 0}
                 </span>
                 <span>Pools</span>
               </div>
               <div className="p-5 flex flex-col justify-center items-center bg-slate-100 h-20 border shadow-md w-full">
                 <span className="text-lg font-bold text-pink-500 leading-5">
-                  {55}
+                  {stats?.totalDonating || 0}
                 </span>
                 <span>Donators</span>
               </div>
               <div className="p-5 flex flex-col justify-center items-center bg-slate-100 h-20 border shadow-md w-full">
                 <span className="text-lg font-bold text-pink-500 leading-5">
-                  {26} BNB
+                  {stats?.totalDonations || 0} BNB
                 </span>
                 <span>Donated</span>
               </div>

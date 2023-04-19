@@ -1,8 +1,15 @@
 import Identicons from "react-identicons";
 import { SiBinance } from "react-icons/si";
-import { daysRemaining, setGlobalState, truncate } from "../store";
+import {
+  daysRemaining,
+  setGlobalState,
+  truncate,
+  useGlobalState,
+} from "../store";
+import { payoutProject } from "../services/blockchain";
 
 const ProjectDetails = ({ project }) => {
+  const [connectedAccount] = useGlobalState("connectedAccount");
   const expired = new Date().getTime() > Number(project?.expiresAt + "000");
   // console.log(project);
   return (
@@ -26,7 +33,6 @@ const ProjectDetails = ({ project }) => {
                   : daysRemaining(project?.expiresAt) + " left"}
               </small>
             </div>
-
             {/*Donation Details */}
             <div className="flex justify-between items-center w-full py-3">
               <div className="flex justify-start items-center space-x-2">
@@ -37,10 +43,15 @@ const ProjectDetails = ({ project }) => {
                     className="rounded-full shadow-md"
                   />
                 </span>
-                <small className="text-gray-700">
-                  {truncate(project?.owner, 4, 4, 11)}
+                {project?.owner ? (
+                  <small className="text-gray-700">
+                    {truncate(project?.owner, 4, 4, 11)}
+                  </small>
+                ) : null}
+
+                <small className="text-gray-500 font-bold">
+                  {project?.donators} Donator{project?.donators == 1 ? "" : "s"}
                 </small>
-                <small className="text-gray-500 font-bold">{15} Donors</small>
               </div>
               <div className="font-bold">
                 {expired ? (
@@ -58,14 +69,15 @@ const ProjectDetails = ({ project }) => {
                 )}
               </div>
             </div>
-
             {/*Progress Donation */}
             <div className="py-2">
               <h5 className="font-bold text-lg">Progress</h5>
-              <div className="w-full bg-gray-300 mt-3">
+              <div className="w-full bg-gray-300 overflow-hidden mt-3">
                 <div
                   className="bg-pink-500/75 text-xs font-medium text-pink-300 text-center p-0.5 leading-none rounded-l-full h-1"
-                  style={{ width: "50%" }}
+                  style={{
+                    width: `${(project?.raised / project?.cost) * 100}%`,
+                  }}
                 ></div>
               </div>
               <div className="flex justify-between  items-center mt-2 font-bold">
@@ -82,35 +94,64 @@ const ProjectDetails = ({ project }) => {
               </div>
             </div>
 
+            {/*Donate buttons */}
             <div className="flex flex-wrap mt-4 space-x-2 space-y-1">
-              <button
-                type="button"
-                onClick={() => setGlobalState("donateModal", "scale-100")}
-                className="py-1 px-6 text-m md:flex bg-gradient-to-r from-pink-500 to-fuchsia-400 hover:bg-gradient-to-l  rounded-full shadow-lg text-white font-bold transition ease-in-out delay-100 hover:-translate-y-1 hover:scale-105 duration-800 hover:animate-pulse"
-              >
-                Donate
-              </button>
-              <button
-                type="button"
-                onClick={() => setGlobalState("updateModal", "scale-100")}
-                className="py-1 px-6 text-m md:flex bg-gradient-to-r from-pink-800 to-fuchsia-900 hover:bg-gradient-to-l  rounded-full shadow-lg text-white font-bold transition ease-in-out delay-100 hover:-translate-y-1 hover:scale-105 duration-800 hover:animate-pulse"
-              >
-                Edit
-              </button>
-              <button
-                type="button"
-                onClick={() => setGlobalState("deleteModal", "scale-100")}
-                className="py-1 px-6 text-m md:flex bg-gradient-to-r from-red-700 to-fuchsia-800 hover:bg-gradient-to-l  rounded-full shadow-lg text-white font-bold transition ease-in-out delay-100 hover:-translate-y-1 hover:scale-105 duration-800 hover:animate-pulse"
-              >
-                Delete
-              </button>
-              <button
-                type="button"
-                onClick={() => {}}
-                className="py-1 px-6 text-m md:flex bg-yellow-600 hover:bg-gradient-to-l  rounded-full shadow-lg text-white font-bold transition ease-in-out delay-100 hover:-translate-y-1 hover:scale-105 duration-800 hover:animate-pulse"
-              >
-                Payout
-              </button>
+              {project?.status == 0 ? (
+                <button
+                  type="button"
+                  onClick={() => setGlobalState("donateModal", "scale-100")}
+                  className="py-1 px-6 text-m md:flex bg-gradient-to-r from-pink-500 to-fuchsia-400 hover:bg-gradient-to-l  rounded-full shadow-lg text-white font-bold transition ease-in-out delay-100 hover:-translate-y-1 hover:scale-105 duration-800 hover:animate-pulse"
+                >
+                  Donate
+                </button>
+              ) : null}
+
+              {/*Admin buttons */}
+              {connectedAccount == project?.owner ? (
+                project?.status != 3 ? (
+                  project?.status == 1 ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => payoutProject(project?.id)}
+                        className="py-1 px-6 text-m md:flex bg-yellow-600 hover:bg-gradient-to-l  rounded-full shadow-lg text-white font-bold transition ease-in-out delay-100 hover:-translate-y-1 hover:scale-105 duration-800 hover:animate-pulse"
+                      >
+                        Payout
+                      </button>
+                    </>
+                  ) : project?.status != 4 ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setGlobalState("updateModal", "scale-100")
+                        }
+                        className="py-1 px-6 text-m md:flex bg-gradient-to-r from-pink-800 to-fuchsia-900 hover:bg-gradient-to-l  rounded-full shadow-lg text-white font-bold transition ease-in-out delay-100 hover:-translate-y-1 hover:scale-105 duration-800 hover:animate-pulse"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setGlobalState("deleteModal", "scale-100")
+                        }
+                        className="py-1 px-6 text-m md:flex bg-gradient-to-r from-red-700 to-fuchsia-800 hover:bg-gradient-to-l  rounded-full shadow-lg text-white font-bold transition ease-in-out delay-100 hover:-translate-y-1 hover:scale-105 duration-800 hover:animate-pulse"
+                      >
+                        Delete
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        className="py-1 px-6 text-m md:flex bg-gradient-to-r from-red-700 to-fuchsia-800 hover:bg-gradient-to-l  rounded-full shadow-lg text-white font-bold transition ease-in-out delay-100 hover:-translate-y-1 hover:scale-105 duration-800 hover:animate-pulse"
+                      >
+                        Project Closed
+                      </button>
+                    </>
+                  )
+                ) : null
+              ) : null}
             </div>
           </div>
         </div>

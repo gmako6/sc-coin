@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import DeleteProject from "../components/DeleteProject";
 import DonateProject from "../components/DonateProject";
 import ProjectDetails from "../components/ProjectDetails";
@@ -11,23 +11,26 @@ import { useGlobalState } from "../store";
 
 const Project = () => {
   const { id } = useParams();
+  const [loaded, setLoaded] = useState(false);
   const [project] = useGlobalState("project");
+  const [donators] = useGlobalState("donators");
 
   useEffect(async () => {
     await loadProject(id);
+    setLoaded(true);
   }, []);
 
-  return (
+  return loaded ? (
     <>
       <div className="container mx-auto py-24 md:pt-40 px-5">
         <ProjectDetails project={project} />
-        <ProjectDonators />
-        <UpdateProject />
-        <DonateProject />
-        <DeleteProject />
+        <UpdateProject project={project} />
+        <DeleteProject project={project} />
+        <DonateProject project={project} />
+        <ProjectDonators donators={donators} />
       </div>
     </>
-  );
+  ) : null;
 };
 
 export default Project;

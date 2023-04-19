@@ -86,7 +86,7 @@ const ProjectCard = ({ project }) => {
         </div>
 
         {/*Progress Donation */}
-        <div className="w-full bg-gray-300 ">
+        <div className="w-full bg-gray-300 overflow-hidden ">
           <div
             className="bg-pink-500/75 text-xs font-medium text-pink-300 text-center p-0.5 leading-none rounded-l-full h-1"
             style={{ width: `${(project.raised / project.cost) * 100}%` }}
@@ -115,7 +115,7 @@ const ProjectCard = ({ project }) => {
             ) : project?.status == 2 ? (
               <small className="text-gray-500">Reverted</small>
             ) : project?.status == 3 ? (
-              <small className="text-red-500">Deleted</small>
+              <small className="text-gray-500">Deleted</small>
             ) : (
               <small className="text-orange-500">Paid</small>
             )}

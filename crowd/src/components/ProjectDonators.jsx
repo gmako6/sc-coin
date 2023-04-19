@@ -1,7 +1,9 @@
 import Identicons from "react-identicons";
 import { SiBinance } from "react-icons/si";
+import { truncate } from "../store";
+import Moment from "react-moment";
 
-const ProjectDonators = () => {
+const ProjectDonators = ({ donators }) => {
   return (
     <div className="py-10 flex-col justify-center items-start ">
       <div className="max-h-[calc(100vh_-_20rem)] overflow-y-auto shadow-md rounded-md w-full">
@@ -35,39 +37,47 @@ const ProjectDonators = () => {
             </tr>
           </thead>
           <tbody>
-            {Array(16)
-              .fill()
-              .map((funding, i) => (
-                <tr key={i} className="border-b border-gray-200">
-                  <td className="text-sm font-light px-6 py-4 whitespace-nowrap">
-                    <span className="flex justify-start items-center space-x-2">
-                      <Identicons
-                        string={"0x9e....487f" + i}
-                        size={15}
-                        className="rounded-full shadow-md"
-                      />
-                      <h5 className="text-gray-700">0x9e....487f{i}</h5>
-                    </span>
-                  </td>
-                  <td className="text-sm font-light px-6 py-4 whitespace-nowrap">
-                    <span className="flex justify-start items-center space-x-2">
-                      <SiBinance className="text-orange" />
-                      <span className="text-gray-500">{3} BNB</span>
-                    </span>
-                  </td>
-                  <td className="text-sm font-light px-6 py-4 whitespace-nowrap">
-                    {false ? "Yes" : "No"}
-                  </td>
-                  <td className="text-sm font-light px-6 py-4 whitespace-nowrap">
-                    {new Date().getTime()}
-                  </td>
-                </tr>
-              ))}
+            {donators.map((donator, i) => (
+              <Donator key={i} donator={donator} />
+            ))}
           </tbody>
         </table>
       </div>
     </div>
   );
 };
+
+const Donator = ({ donator }) => (
+  <>
+    <tr className="border-b border-gray-200">
+      <td className="text-sm font-light px-6 py-4 whitespace-nowrap">
+        <span className="flex justify-start items-center space-x-2">
+          <Identicons
+            string={donator?.owner}
+            size={15}
+            className="rounded-full shadow-md"
+          />
+          {donator.owner ? (
+            <h5 className="text-gray-700">
+              {truncate(donator?.owner, 4, 4, 11)}
+            </h5>
+          ) : null}
+        </span>
+      </td>
+      <td className="text-sm font-light px-6 py-4 whitespace-nowrap">
+        <span className="flex justify-start items-center space-x-2">
+          <SiBinance className="text-orange" />
+          <span className="text-gray-500">{donator?.contribution} BNB</span>
+        </span>
+      </td>
+      <td className="text-sm font-light px-6 py-4 whitespace-nowrap">
+        {donator?.refunded ? "Yes" : "No"}
+      </td>
+      <td className="text-sm font-light px-6 py-4 whitespace-nowrap">
+        <Moment fromNow>{donator?.timestamp}</Moment>
+      </td>
+    </tr>
+  </>
+);
 
 export default ProjectDonators;

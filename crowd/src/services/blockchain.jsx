@@ -90,6 +90,45 @@ const createProject = async ({
   }
 };
 
+//Update Project.
+const updateProject = async ({
+  id,
+  title,
+  description,
+  imageURL,
+  expiresAt,
+}) => {
+  try {
+    if (!ethereum) return alert("Please install Metamask");
+
+    const contract = await getContract();
+    tx = await contract.updateProject(
+      id,
+      title,
+      description,
+      imageURL,
+      expiresAt
+    );
+
+    await tx.wait();
+    await loadProject(id);
+  } catch (error) {
+    reportError(error);
+  }
+};
+
+//Deleting the project.
+const deleteProject = async (id) => {
+  try {
+    if (!ethereum) return alert("Please install Metamask");
+    const contract = await getContract();
+
+    await contract.deleteProject(id);
+  } catch (error) {
+    reportError(error);
+  }
+};
+
 //Load Projects.
 const loadProjects = async () => {
   try {
@@ -120,6 +159,67 @@ const loadProject = async (id) => {
     reportError(error);
   }
 };
+
+//Donate project.
+const donateProject = async (id, amount) => {
+  try {
+    if (!ethereum) return alert("Please install Metamask");
+    const connectedAccount = getGlobalState("connectedAccount");
+    const contract = await getContract();
+    amount = ethers.utils.parseEther(amount);
+
+    tx = await contract.donateProject(id, {
+      from: connectedAccount,
+      value: amount._hex,
+    });
+
+    await tx.wait();
+    await getDonators(id);
+  } catch (error) {
+    reportError(error);
+  }
+};
+
+//Get donators.
+const getDonators = async (id) => {
+  try {
+    if (!ethereum) return alert("Please install Metamask");
+    const contract = await getContract();
+    let donators = await contract.getDonators(id);
+
+    setGlobalState("donators", structuredDonators(donators));
+  } catch (error) {
+    reportError(error);
+  }
+};
+
+//Get Payout.
+const payoutProject = async (id) => {
+  try {
+    if (!ethereum) return alert("Please install Metamask");
+    const connectedAccount = getGlobalState("connectedAccount");
+    const contract = await getContract();
+
+    tx = await contract.payOutProject(id, {
+      from: connectedAccount,
+    });
+
+    await tx.wait();
+    await getDonators(id);
+  } catch (error) {
+    reportError(error);
+  }
+};
+
+const structuredDonators = (donators) =>
+  donators
+    .map((donator) => ({
+      owner: donator.owner.toLowerCase(),
+      refunded: donator.refunded,
+      timestamp: new Date(donator.timestamp.toNumber() * 1000).toJSON(),
+      contribution: parseInt(donator.contribution._hex) / 10 ** 18,
+    }))
+    .reverse();
 
 const structuredProjects = (projects) =>
   projects
@@ -163,6 +263,11 @@ export {
   connectWallet,
   isWallectConnected,
   createProject,
+  updateProject,
+  deleteProject,
   loadProjects,
   loadProject,
+  donateProject,
+  getDonators,
+  payoutProject,
 };

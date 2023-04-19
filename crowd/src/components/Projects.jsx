@@ -70,7 +70,7 @@ const ProjectCard = ({ project }) => {
 
         {/*Pool Creator Details*/}
         <div className="flex flex-col my-2">
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-start space-x-2 mb-3">
             <Identicons
               string={project?.owner}
               size={15}

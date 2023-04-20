@@ -1,0 +1,75 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/Volumes/Gmako-DATA/coin projects 2022/succorcoin/succorcoin/sc-coin/crowd/src/contracts/SCCrowd.sol": {
+      "lastModificationDate": 1681080993000,
+      "contentHash": "e2f743ac128dcddcb4678cc0c927ec64",
+      "sourceName": "src/contracts/SCCrowd.sol",
+      "solcConfig": {
+        "version": "0.8.11",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "SCCrowd"
+      ]
+    },
+    "/Volumes/Gmako-DATA/coin projects 2022/succorcoin/succorcoin/sc-coin/crowdLive/src/contracts/SCCrowd.sol": {
+      "lastModificationDate": 1681984276000,
+      "contentHash": "e2f743ac128dcddcb4678cc0c927ec64",
+      "sourceName": "src/contracts/SCCrowd.sol",
+      "solcConfig": {
+        "version": "0.8.11",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "SCCrowd"
+      ]
+    }
+  }
+}

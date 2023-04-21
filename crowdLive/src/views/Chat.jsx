@@ -9,7 +9,7 @@ const Chat = () => {
   const [connectedAccount] = useGlobalState("connectedAccount");
 
   return (
-    <div className="flex justify-center items-center flex-col flex-wrap p-6 mx-auto">
+    <div className="flex justify-center items-center flex-col flex-wrap p-6 container mx-auto my-24">
       <div className="flex justify-between items-center w-full">
         <div className="flex justify-start items-center space-x-2">
           <Identicon

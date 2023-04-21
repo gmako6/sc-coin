@@ -1,5 +1,6 @@
 import React from "react";
 import { setGlobalState, useGlobalState } from "../store";
+import { SiBinance } from "react-icons/si";
 
 const Hero = () => {
   const [stats] = useGlobalState("stats");
@@ -49,9 +50,12 @@ const Hero = () => {
               </div>
               <div className="p-5 flex flex-col justify-center items-center bg-slate-100 h-20 border shadow-md w-full">
                 <span className="text-lg font-bold text-pink-500 leading-5">
-                  {stats?.totalDonations || 0} BNB
+                  {stats?.totalDonations || 0}
                 </span>
-                <span>Donated</span>
+                <span className="flex space-x-1 justify-center items-center">
+                  <SiBinance className="h-3 w-3 " />
+                  Donated
+                </span>
               </div>
             </div>
           </div>

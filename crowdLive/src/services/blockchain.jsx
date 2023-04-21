@@ -2,6 +2,7 @@ import abi from "../abis/src/contracts/SCCrowd.sol/SCCrowd.json";
 import address from "../abis/contractAddress.json";
 import { getGlobalState, setGlobalState } from "../store";
 import { ethers } from "ethers";
+import { logOutWithCometChat } from "../services/CometChat";
 
 const { ethereum } = window;
 const contractAddress = address.address;
@@ -34,6 +35,7 @@ const isWallectConnected = async () => {
 
     window.ethereum.on("accountsChanged", async () => {
       setGlobalState("connectedAccount", accounts[0]?.toLowerCase());
+      await logOutWithCometChat();
       await isWallectConnected();
     });
 
@@ -270,4 +272,5 @@ export {
   donateProject,
   getDonators,
   payoutProject,
+  getContract,
 };

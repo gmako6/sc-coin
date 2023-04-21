@@ -32,6 +32,7 @@ const CreateProject = () => {
     await createProject(params);
     toast.success("Project created successfully, will reflect in 30sec.");
     onClose();
+    // console.log("Project created successfully"); //DELETEME.
   };
 
   const onClose = () => {
@@ -116,6 +117,7 @@ const CreateProject = () => {
               name="imageURL"
               placeholder="Image URL"
               onChange={(e) => setImageURL(e.target.value)}
+              pattern="^(http(s)?:\/\/)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$"
               value={imageURL}
               required
             />

@@ -1,28 +1,40 @@
 import Identicons from "react-identicons";
 import { SiBinance } from "react-icons/si";
+import { payoutProject } from "../services/blockchain";
+import { useNavigate } from "react-router-dom";
 import {
   daysRemaining,
   setGlobalState,
   truncate,
   useGlobalState,
 } from "../store";
-import { payoutProject } from "../services/blockchain";
 
 const ProjectDetails = ({ project }) => {
-  const [connectedAccount] = useGlobalState("connectedAccount");
   const expired = new Date().getTime() > Number(project?.expiresAt + "000");
-  // console.log(project);
+  const [connectedAccount] = useGlobalState("connectedAccount");
+  const [group] = useGlobalState("group");
+  const navigate = useNavigate();
+
+  //Handle chat.
+  const handleChat = () => {
+    if (group?.hasJoined) {
+      navigate(`/chats/` + project.id);
+    } else {
+      setGlobalState("chatModal", "scale-100");
+    }
+  };
+
   return (
     <>
       <div className="">
         <h1 className="text-gray-900 text-2xl font-medium mb-3">
           {project?.title}
         </h1>
-        <div className="flex justify-start sm:space-x-4 flex-wrap">
+        <div className="flex justify-start sm:space-x-4 flex-wrap ">
           <img
             src={project?.imageURL}
             alt={project?.title}
-            className="rounded h-64 w-full sm:w-1/3 object-cover"
+            className="rounded h-64 w-full sm:w-1/3 object-cover border-2 border-pink-500"
           />
           <div className="flex-1 sm:py-0 py-4">
             {/*Title Days Left*/}
@@ -126,7 +138,7 @@ const ProjectDetails = ({ project }) => {
                         onClick={() =>
                           setGlobalState("updateModal", "scale-100")
                         }
-                        className="py-1 px-6 text-m md:flex bg-gradient-to-r from-pink-800 to-fuchsia-900 hover:bg-gradient-to-l  rounded-full shadow-lg text-white font-bold transition ease-in-out delay-100 hover:-translate-y-1 hover:scale-105 duration-800 hover:animate-pulse"
+                        className="py-1 px-6 text-m md:flex bg-gradient-to-r from-gray-900 to-gray-600  hover:bg-gradient-to-l  rounded-full shadow-lg text-white font-bold transition ease-in-out delay-100 hover:-translate-y-1 hover:scale-105 duration-800 hover:animate-pulse"
                       >
                         Edit
                       </button>
@@ -135,7 +147,7 @@ const ProjectDetails = ({ project }) => {
                         onClick={() =>
                           setGlobalState("deleteModal", "scale-100")
                         }
-                        className="py-1 px-6 text-m md:flex bg-gradient-to-r from-red-700 to-fuchsia-800 hover:bg-gradient-to-l  rounded-full shadow-lg text-white font-bold transition ease-in-out delay-100 hover:-translate-y-1 hover:scale-105 duration-800 hover:animate-pulse"
+                        className="py-1 px-6 text-m md:flex bg-gradient-to-r from-red-900 to-red-700 hover:bg-gradient-to-l  rounded-full shadow-lg text-white font-bold transition ease-in-out delay-100 hover:-translate-y-1 hover:scale-105 duration-800 hover:animate-pulse"
                       >
                         Delete
                       </button>
@@ -152,9 +164,18 @@ const ProjectDetails = ({ project }) => {
                   )
                 ) : null
               ) : null}
+
+              <button
+                onClick={handleChat}
+                type="button"
+                className="py-1 px-6 text-m md:flex bg-gradient-to-r from-orange-900 to-orange-500 hover:bg-gradient-to-l  rounded-full shadow-lg text-white font-bold transition ease-in-out delay-100 hover:-translate-y-1 hover:scale-105 duration-800 hover:animate-pulse"
+              >
+                Chat
+              </button>
             </div>
           </div>
         </div>
+
         {/*Description*/}
         <div className="py-10">
           <h5 className="font-bold text-lg">Description</h5>

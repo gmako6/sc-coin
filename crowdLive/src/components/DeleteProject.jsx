@@ -14,6 +14,7 @@ const DeleteProject = ({ project }) => {
     toast.success("Project deleted successfully, will reflect in 30sec.");
     setGlobalState("deleteModal", "scale-0");
     navigate.push("/");
+    // console.log("Project Deleted!"); //DELETEME.
   };
 
   return (

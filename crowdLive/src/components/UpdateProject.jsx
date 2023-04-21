@@ -94,6 +94,7 @@ const UpdateProject = ({ project }) => {
               name="imageURL"
               placeholder="Image URL"
               onChange={(e) => setImageURL(e.target.value)}
+              pattern="^(http(s)?:\/\/)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$"
               value={imageURL}
               required
             />
